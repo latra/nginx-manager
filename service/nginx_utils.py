@@ -6,13 +6,14 @@ class NginxUtils:
         self.config_path = config.nginx.config_path
         self.docker_config_file = config.nginx.docker_config_file
         self.config_warn_message = config.nginx.config_warn_message
+        print(config.nginx.config_warn_message)
         self.private_key_path = config.nginx.private_key_path
         self.certificate_path = config.nginx.certificate_path
         self.letsencrypt_path = config.nginx.letsencrypt_path
 
     def update_nginx_config(self, domain: str, domain_config: str, routes: list[NginxRoute]):
-        routes_config = [generate_route_config(route.path, route.container_id, route.port, route.custom_config) if route.enabled else '' for route in routes]
-        config_data = generate_config_file(server_config=domain_config, routes_config=routes_config)
+        routes_config = [generate_route_config(route.path, route.container_id, route.port, route.custom_config, route.target_path) if route.enabled else '' for route in routes]
+        config_data = generate_config_file(server_config=domain_config, routes_config=routes_config, warn_message=self.config_warn_message)
         if domain == "default":
             config_file_path = self.config_path + self.docker_config_file
         else:
@@ -31,7 +32,7 @@ class NginxUtils:
         return generate_route_config(route.path, route.container_id, route.port)
     
     def get_default_domain_config(self, domain: str):
-        return config_lines(is_default=True if domain == "default" else False, 
+        return config_lines( is_default=True if domain == "default" else False, 
                             server_name=domain, 
                             ssl_certificate=self.get_ssl_certificate_route(domain) if domain != "default" else self.certificate_path, 
                             ssl_certificate_key=self.get_ssl_private_key_route(domain) if domain != "default" else self.private_key_path)

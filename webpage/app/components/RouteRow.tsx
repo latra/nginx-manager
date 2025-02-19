@@ -7,9 +7,10 @@ import { RouteDetails } from './RouteDetails'
 interface RouteRowProps {
   route: NginxRoute;
   onRouteChange: () => void;
+  onRouteDeleted: () => void;
 }
 
-export default function RouteRow({ route, onRouteChange }: RouteRowProps) {
+export default function RouteRow({ route, onRouteChange, onRouteDeleted }: RouteRowProps) {
   const [showDetails, setShowDetails] = useState(false)
 
   const handleStatusChange = async () => {
@@ -29,6 +30,7 @@ export default function RouteRow({ route, onRouteChange }: RouteRowProps) {
     try {
       await deleteRoute(route.id)
       onRouteChange()
+      onRouteDeleted()
     } catch (error) {
       console.error('Error deleting route:', error)
     }
@@ -53,6 +55,9 @@ export default function RouteRow({ route, onRouteChange }: RouteRowProps) {
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
         <Badge variant="default">{route.proxy_type}</Badge>
+      </td>
+      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+        {route.container_id}:{route.port}/{route.target_path}
       </td>
       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
         <Badge variant={route.enabled ? 'success' : 'error'}>

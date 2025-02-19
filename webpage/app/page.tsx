@@ -8,6 +8,7 @@ import { useCallback, useRef } from 'react'
 
 export default function Home() {
   const pathsListRef = useRef<{ loadRoutes: () => void } | null>(null)
+  const domainsListRef = useRef<{ loadDomains: () => void } | null>(null)
 
   const handleNginxRestart = useCallback(() => {
     pathsListRef.current?.loadRoutes()
@@ -15,12 +16,18 @@ export default function Home() {
 
   const handleRouteCreated = useCallback(() => {
     pathsListRef.current?.loadRoutes()
+    domainsListRef.current?.loadDomains()
+
+  }, [])
+  const handleRouteDeleted = useCallback(() => {
+    pathsListRef.current?.loadRoutes()
+    domainsListRef.current?.loadDomains()
   }, [])
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="col-span-1 m-4" >
+        <div className="col-span-1 m-4 flex flex-col gap-4" >
         <Card>
           <h2 className="text-base font-semibold leading-7 text-gray-900 mb-4">
             Nginx Status
@@ -31,14 +38,14 @@ export default function Home() {
           <h2 className="text-base font-semibold leading-7 text-gray-900 mb-4">
             Domains
           </h2>
-          <DomainList />
+          <DomainList ref={domainsListRef} />
         </Card>
         </div>
         <Card>
           <h2 className="text-base font-semibold leading-7 text-gray-900 mb-4">
             Create New Route
           </h2>
-          <CreateEntry onRouteCreated={handleRouteCreated} />
+          <CreateEntry onRouteCreated={handleRouteCreated}  />
         </Card>
       </div>
 
@@ -46,7 +53,7 @@ export default function Home() {
         <h2 className="text-base font-semibold leading-7 text-gray-900 mb-4">
           Routes
         </h2>
-        <PathsList ref={pathsListRef} />
+        <PathsList ref={pathsListRef} onRouteDeleted={handleRouteDeleted} />
       </Card>
     </div>
   )

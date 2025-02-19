@@ -1,12 +1,15 @@
 {
   "name": "webpage",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "https://localhost:8085",
+
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -H 0.0.0.0",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start -H 0.0.0.0",
+    "lint": "next lint",
+    "export": "next export"
   },
   "dependencies": {
     "react": "^19.0.0",

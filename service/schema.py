@@ -10,6 +10,7 @@ class NginxRoute(BaseModel):
     domain: str = ""
     path: str = "/"
     container_id: str | None = None
+    target_path: str = ""
     port: int | None = None
     static_path: str | None = None
     enabled: bool = True

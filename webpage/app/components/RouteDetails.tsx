@@ -12,7 +12,7 @@ interface RouteDetailsProps {
 }
 
 export function RouteDetails({ route, onClose, onUpdate }: RouteDetailsProps) {
-  const [formData, setFormData] = useState(route)
+  const [formData, setFormData] = useState<NginxRoute>(route)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -126,7 +126,7 @@ export function RouteDetails({ route, onClose, onUpdate }: RouteDetailsProps) {
           </div>
 
           {formData.proxy_type === 'docker' && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <Tooltip text="El ID o nombre del contenedor Docker al que se redirigirá el tráfico">
                 <Input
                   label="Container ID"
@@ -148,6 +148,17 @@ export function RouteDetails({ route, onClose, onUpdate }: RouteDetailsProps) {
                   required
                 />
               </Tooltip>
+
+          <Tooltip text="Si es necesario, una ruta dentro del contenedor especifica">
+            <Input
+              label="Target Path"
+              name="target_path"
+              value={formData.target_path || '/'}
+              onChange={handleInputChange}
+              placeholder="/"
+              required
+            />
+          </Tooltip>
             </div>
           )}
 

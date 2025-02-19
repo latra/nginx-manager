@@ -26,6 +26,7 @@ class Database:
                     proxy_type TEXT NOT NULL,      
                     container_id TEXT,
                     port INTEGER,
+                    target_path TEXT,
                     static_path TEXT,
                     enabled BOOLEAN DEFAULT TRUE,
                     info TEXT,
@@ -75,14 +76,15 @@ class Database:
             cursor = conn.cursor()
             cursor.execute('''
                 INSERT INTO routes 
-                (domain, path, proxy_type, container_id, port, static_path, enabled, info, description, custom_config, project_name, contact_user)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (domain, path, proxy_type, container_id, port, target_path, static_path, enabled, info, description, custom_config, project_name, contact_user)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 route.domain,
                 route.path,
                 route.proxy_type.value,
                 route.container_id,
                 route.port,
+                route.target_path,
                 route.static_path,
                 route.enabled,
                 route.info,
@@ -98,8 +100,8 @@ class Database:
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                UPDATE routes SET domain = ?, path = ?, proxy_type = ?, container_id = ?, port = ?, static_path = ?, enabled = ?, info = ?, description = ?, custom_config = ?, project_name = ?, contact_user = ? WHERE id = ?
-            ''', (route.domain, route.path, route.proxy_type.value, route.container_id, route.port, route.static_path, route.enabled, route.info, route.description, route.custom_config, route.project_name, route.contact_user, id))
+                UPDATE routes SET domain = ?, path = ?, proxy_type = ?, container_id = ?, port = ?, target_path = ?, static_path = ?, enabled = ?, info = ?, description = ?, custom_config = ?, project_name = ?, contact_user = ? WHERE id = ?
+            ''', (route.domain, route.path, route.proxy_type.value, route.container_id, route.port, route.target_path, route.static_path, route.enabled, route.info, route.description, route.custom_config, route.project_name, route.contact_user, id))
             conn.commit()
             return True
 
@@ -107,7 +109,7 @@ class Database:
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT id, domain, path, proxy_type, container_id, port, static_path, enabled, info, description, custom_config, project_name, contact_user
+                SELECT id, domain, path, proxy_type, container_id, port, target_path, static_path, enabled, info, description, custom_config, project_name, contact_user
                     FROM routes WHERE domain = ?
             ''', (domain,))
             routes = cursor.fetchall()
@@ -120,13 +122,14 @@ class Database:
                     proxy_type=route[3],
                     container_id=route[4],
                     port=route[5],
-                    static_path=route[6],   
-                    enabled=route[7],
-                    info=route[8],
-                    description=route[9],
-                    custom_config=route[10],
-                    project_name=route[11],
-                    contact_user=route[12]
+                    target_path=route[6],   
+                    static_path=route[7],
+                    enabled=route[8],
+                    info=route[9],
+                    description=route[10],
+                    custom_config=route[11],
+                    project_name=route[12],
+                    contact_user=route[13]
                 )
                 for route in routes
             ] 
@@ -143,7 +146,7 @@ class Database:
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT id, domain, path, proxy_type, container_id, port, static_path, enabled, info, description, custom_config, project_name, contact_user
+                SELECT id, domain, path, proxy_type, container_id, port, target_path, static_path, enabled, info, description, custom_config, project_name, contact_user
                 FROM routes
             ''')
             routes = cursor.fetchall()
@@ -155,13 +158,14 @@ class Database:
                     proxy_type=route[3],
                     container_id=route[4],
                     port=route[5],
-                    static_path=route[6],
-                    enabled=route[7],
-                    info=route[8],
-                    description=route[9],
-                    custom_config=route[10],
-                    project_name=route[11],
-                    contact_user=route[12]
+                    target_path=route[6],
+                    static_path=route[7],
+                    enabled=route[8],
+                    info=route[9],
+                    description=route[10],
+                    custom_config=route[11],
+                    project_name=route[12],
+                    contact_user=route[13]
                 )
                 for route in routes
             ] 
@@ -186,7 +190,7 @@ class Database:
         with self.get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute('''
-                SELECT id, domain, path, proxy_type, container_id, port, static_path, enabled, info, description, custom_config, project_name, contact_user FROM routes WHERE id = ?
+                SELECT id, domain, path, proxy_type, container_id, port, target_path, static_path, enabled, info, description, custom_config, project_name, contact_user FROM routes WHERE id = ?
             ''', (id,))
             route = cursor.fetchone()
             return NginxRouteCreated(
@@ -196,13 +200,14 @@ class Database:
                 proxy_type=route[3],
                 container_id=route[4],
                 port=route[5],
-                static_path=route[6],
-                enabled=route[7],
-                info=route[8],
-                description=route[9],
-                custom_config=route[10],
-                project_name=route[11],
-                contact_user=route[12]
+                target_path=route[6],
+                static_path=route[7],
+                enabled=route[8],
+                info=route[9],
+                description=route[10],
+                custom_config=route[11],
+                project_name=route[12],
+                contact_user=route[13]
             ) if route else None
         
     def delete_route(self, id: int):
@@ -212,3 +217,11 @@ class Database:
                 DELETE FROM routes WHERE id = ?
             ''', (id,))
             conn.commit()   
+
+    def delete_domain_custom_config(self, domain: str):
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                DELETE FROM domains WHERE domain = ?
+            ''', (domain,))
+            conn.commit()

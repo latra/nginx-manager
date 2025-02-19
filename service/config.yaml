@@ -2,7 +2,7 @@ docker:
   # Para MacOS
   # base_url: "unix:///var/run/docker.sock"  # URL estándar para el socket de Docker
   # O si estás usando Docker Desktop en MacOS, podrías necesitar:
-  base_url: "unix:///Users//.docker/run/docker.sock"
+  base_url: "unix:///Users/paula.gallucci/.docker/run/docker.sock"
   network: dev-nginx
 
 nginx:
@@ -13,4 +13,4 @@ nginx:
   certificate_path: /etc/nginx/ssl/certificate.crt
   letsencrypt_path: /etc/letsencrypt/live/
   docker_config_file: dockers.conf
-  config_warn_message: "# Por favor, NO EDITES este archivo. usa la herramienta de configuración para conectar tu contenedor!"
+  config_warn_message: "# Por favor, NO EDITES este archivo. usa dev-nginx para conectar tu contenedor!"

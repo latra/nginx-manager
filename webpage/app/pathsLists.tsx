@@ -10,7 +10,11 @@ interface RoutesResponse {
   routes: NginxRoute[];
 }
 
-const PathsList = forwardRef((props, ref) => {
+interface PathsListProps {
+  onRouteDeleted?: () => void;
+}
+
+const PathsList = forwardRef((props: PathsListProps, ref) => {
   const [routes, setRoutes] = useState<RoutesResponse>({ routes: [] })
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({ domain: '', path: '' })
@@ -63,6 +67,7 @@ const PathsList = forwardRef((props, ref) => {
                   <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Domain</th>
                   <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Path</th>
                   <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Type</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Proxy Pass</th>
                   <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                   <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Info</th>
                   <th className="px-3 py-3.5 text-right text-sm font-semibold text-gray-900">Actions</th>
@@ -75,6 +80,7 @@ const PathsList = forwardRef((props, ref) => {
                       key={`${route.domain}${route.path}`}
                       route={route}
                       onRouteChange={loadRoutes}
+                      onRouteDeleted={props.onRouteDeleted || (() => {})}
                     />
                   ))
                 ) : (

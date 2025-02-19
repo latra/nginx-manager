@@ -7,6 +7,7 @@ export interface NginxRoute {
   path: string;
   container_id?: string | null;
   port?: number | null;
+  target_path?: string | null;
   static_path?: string | null;
   enabled: boolean;
   info?: string | null;

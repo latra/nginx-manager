@@ -12,6 +12,7 @@ interface FormData {
   proxy_type: ProxyType
   container_id?: string
   port?: number
+  target_path?: string
   static_path?: string
   custom_config?: string
   description?: string
@@ -31,6 +32,7 @@ export default function CreateEntry({ onRouteCreated }: CreateEntryProps) {
     custom_config: '',
     container_id: '',
     port: undefined,
+    target_path: '',
     static_path: '',
     project_name: '',
     contact_user: ''
@@ -158,7 +160,7 @@ export default function CreateEntry({ onRouteCreated }: CreateEntryProps) {
       </div>
 
       {formData.proxy_type === 'docker' && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Tooltip text="El ID o nombre del contenedor Docker al que se redirigirá el tráfico">
             <Input
               label="Container ID"
@@ -177,6 +179,17 @@ export default function CreateEntry({ onRouteCreated }: CreateEntryProps) {
               value={formData.port || ''}
               onChange={handleInputChange}
               placeholder="8080"
+              required
+            />
+          </Tooltip>
+
+          <Tooltip text="Si es necesario, una ruta dentro del contenedor especifica">
+            <Input
+              label="Target Path"
+              name="target_path"
+              value={formData.target_path || '/'}
+              onChange={handleInputChange}
+              placeholder="/"
               required
             />
           </Tooltip>
