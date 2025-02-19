@@ -14,8 +14,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const backendUrl = process.env.BACKEND_URL
+
   return (
-    <html lang="en" className="h-full bg-gray-50">
+    <html lang="en" className="h-full">
       <body className={`${inter.className} h-full`}>
         <div className="min-h-full">
           <nav className="bg-indigo-600">
@@ -25,7 +27,10 @@ export default function RootLayout({
                   <div className="flex-shrink-0">
                     <h1 className="text-white text-xl font-bold">Nginx Manager</h1>
                   </div>
+                  
                 </div>
+        <p>{backendUrl}</p>
+
               </div>
             </div>
           </nav>

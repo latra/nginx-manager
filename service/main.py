@@ -127,7 +127,13 @@ def activate_route(id: int):
 
 @nginx_app.delete("/route/{id}", tags=["routes"])
 def delete_route(id: int):
+    route = db.get_route(id)
     db.delete_route(id)
+    domain = db.get_domain_custom_config(route.domain)
+    routes = db.get_routes_by_domain(route.domain)
+    if len(routes) == 0:
+        db.delete_domain_custom_config(route.domain)
+
     return {"message": "Route deleted successfully"}
 
 @nginx_app.get("/nginx_status", tags=["nginx"])
