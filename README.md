@@ -1,4 +1,4 @@
-# PRUMINX - **PR**oxy **U**tility **M**anager for **N**ginx
+# PRUMINX - **PR**oxy **U**tility **M**anager for Ng**INX**
 
 Tired of working with Docker and use a single nginx as a proxy for your domains?
 Your colleague is broking the nginx config every time he/she adds a new service? **We are.**

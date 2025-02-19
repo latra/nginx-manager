@@ -1,0 +1,34 @@
+services:
+  nextjs:
+    image: node:18
+    container_name: nextjs_app
+    working_dir: /app
+    volumes:
+      - ./app:/app
+      - ./webpage:/app
+    ports:
+      - "${PRUMIX_WEB_PORT}:3000"
+    #command: "sh -c 'npm run build && npm run start'"
+    command: "npm run dev"
+    environment:
+      - BACKEND_URL=http://${SERVER_IP}:${PRUMIX_API_PORT}
+    networks:
+      - api_network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_app
+    
+    working_dir: /app
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./nginx_config:/app/nginx_conf
+    ports:
+      - "${PRUMIX_API_PORT}:8000"
+    networks:
+      - api_network
+networks:
+  api_network:
+    driver: bridge
